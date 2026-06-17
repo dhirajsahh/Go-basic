@@ -2,6 +2,7 @@ package main
 
 import (
 	"booking_app/greatuser"
+	"booking_app/userinput"
 	"fmt"
 	"strings"
 	"time"
@@ -25,7 +26,7 @@ func main() {
 
 	for {
 
-		firstName, lastName, email, userTickets := getUserInput()
+		firstName, lastName, email, userTickets := userinput.GetUserInput()
 
 		isValidUserName, isValidEmail, isValidUserTickets := validateUserInput(firstName, lastName, email, userTickets)
 		if !isValidUserName {
@@ -53,20 +54,6 @@ func main() {
 		fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
 	}
 
-}
-
-func getUserInput() (string, string, string, int) {
-	var firstName, lastName, email string
-	var userTickets int
-	fmt.Println("Enter your first Name:")
-	fmt.Scan(&firstName)
-	fmt.Println("Enter your last Name:")
-	fmt.Scan(&lastName)
-	fmt.Println("Enter your email address:")
-	fmt.Scan(&email)
-	fmt.Println("Enter the number of tickets:")
-	fmt.Scan(&userTickets)
-	return firstName, lastName, email, userTickets
 }
 
 func sendTicket(firstName, lastName, email string, userTickets int) {
