@@ -267,6 +267,83 @@ time.Sleep(10 * time.Second) // Simulates delay in sending ticket
 
 This learning journey demonstrates progression from basic syntax to building a concurrent application, covering all essential Go features needed for real-world development.
 
+## HTTP Web Server Examples
+
+This directory contains practical examples of building HTTP servers in Go using the standard `net/http` package, located in the `httpmodule/` directory.
+
+### Examples
+
+#### 1. Basic HTTP Server (`basic_http_server`)
+A simple HTTP server that listens on port 8000 and responds to GET requests at the `/hello` endpoint with a plain text message.
+
+**Key concepts demonstrated:**
+- Basic HTTP server setup with `http.ListenAndServe`
+- Registering handlers with `http.HandleFunc`
+- Simple text response writing
+- Method validation (only allowing GET requests)
+
+**To run:**
+```bash
+go run main.go
+# Then visit http://localhost:8000/hello
+```
+
+#### 2. Multiple Routes (`http_multiple_routes`)
+An HTTP server that demonstrates handling multiple routes and serving static files.
+
+**Key concepts demonstrated:**
+- Handling multiple routes (`/` and `/test`)
+- Serving static files with `http.ServeFile`
+- Processing URL query parameters
+- Creating HTML forms that submit to the server
+- Method validation for different endpoints
+
+**To run:**
+```bash
+go run main.go
+# Then visit http://localhost:8001
+# Try submitting the form to see query parameter handling
+```
+
+#### 3. JSON Encoding/Decoding (`json_encoder`)
+An HTTP server that demonstrates encoding and decoding JSON data in HTTP requests and responses.
+
+**Key concepts demonstrated:**
+- Setting response headers (Content-Type: application/json)
+- Encoding Go structs to JSON with `json.NewEncoder`
+- Decoding JSON request bodies into Go structs with `json.NewDecoder`
+- Handling different HTTP methods (GET and POST)
+- Proper HTTP status codes and headers
+
+**To run:**
+```bash
+go run main.go
+# Then visit:
+# - GET http://localhost:8002/ (returns JSON greeting)
+# - POST http://localhost:8002/decode (with JSON body to echo back)
+```
+
+### Common Patterns
+
+All examples follow these common patterns:
+- Method validation to ensure only allowed HTTP methods are processed
+- Proper error handling with `http.Error`
+- Clear separation of concerns with dedicated handler functions
+- Use of standard Go `net/http` package without external dependencies
+
+### Learning Outcomes
+
+By studying these examples, you will learn how to:
+1. Set up basic HTTP servers in Go
+2. Handle different routes and HTTP methods
+3. Process query parameters and form data
+4. Serve static files (HTML, CSS, etc.)
+5. Work with JSON in HTTP requests and responses
+6. Set appropriate HTTP status codes and headers
+7. Structure HTTP handlers for maintainability
+
+Each example is self-contained and can be run independently.
+
 ---
 
-*Learning completed on: 2026-06-17*
+*Learning completed on: 2026-06-18*
