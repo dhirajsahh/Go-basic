@@ -9,6 +9,7 @@ This repository documents the learning progress of Go programming language throu
 4. [Structs and Methods](#structs-and-methods)
 5. [Booking Application Project](#booking-application-project)
 6. [Key Concepts Learned](#key-concepts-learned)
+7. [Channels and Goroutines](#channels-and-goroutines)
 
 ## Basic Syntax
 
@@ -344,6 +345,138 @@ By studying these examples, you will learn how to:
 
 Each example is self-contained and can be run independently.
 
+## Channels and Goroutines
+
+### Goroutines with WaitGroup
+
+The `sync.WaitGroup` is used to wait for a collection of goroutines to finish executing.
+
+Example from `goroutines/goroutine.go`:
+
+```go
+package main
+
+import (
+    "fmt"
+    "sync"
+)
+
+// task function performed by each goroutine
+func task(i int, wg *sync.WaitGroup) {
+    defer wg.Done() // signals that this goroutine is done
+    fmt.Println("doing task", i)
+}
+
+func main() {
+    var wg sync.WaitGroup
+    for i := 0; i <= 10; i++ {
+        wg.Add(1) // increment the WaitGroup counter for each goroutine
+        go task(i, &wg)
+    }
+    wg.Wait() // block until all goroutines have finished
+}
+```
+
+### Channels
+
+Channels are a typed conduit through which you can send and receive values with the channel operator, `<-`.
+
+#### Unbuffered Channels
+
+Unbuffered channels block until both a sender and a receiver are ready.
+
+Example from `channel/channel.go`:
+
+```go
+package main
+
+import "fmt"
+
+func receive(messageChan chan int) {
+    msg := <-messageChan
+    fmt.Println(msg)
+}
+
+func send(sumChan chan int, a, b int) {
+    sum := a + b
+    sumChan <- sum
+}
+
+func main() {
+    var sumChan chan int
+    sumChan = make(chan int)
+    go send(sumChan, 4, 5)
+    sum := <-sumChan
+    fmt.Println(sum)
+}
+```
+
+#### Buffered Channels
+
+Buffered channels accept a limited number of values without a corresponding receiver for those values.
+
+Example from `channel/buffered_channel.go`:
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+// emailSender receives emails from a buffered channel and signals completion
+func emailSender(emailChan <-chan string, done chan<- bool) {
+    defer func() {
+        done <- true
+    }()
+
+    for email := range emailChan {
+        fmt.Println("sending email to ", email)
+    }
+}
+
+func main() {
+    emailChan := make(chan string, 30) // buffered channel with capacity 30
+    done := make(chan bool)
+
+    go emailSender(emailChan, done)
+    for i := 0; i< 30; i++ {
+        emailChan <- fmt.Sprintf("%v@gmail.com", i)
+    }
+    fmt.Println("Hello world") // non-blocking send due to buffer
+    close(emailChan)
+    <-done
+}
+```
+
+#### Synchronization using Channels
+
+Channels can be used to synchronize goroutines, ensuring one goroutine waits for another to finish.
+
+Example from `channel/synchronization_using_channel.go`:
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func Task(i int, done chan bool) {
+    defer func() {
+        done <- true
+    }()
+    fmt.Println(i)
+}
+
+func main() {
+    done := make(chan bool)
+    a := 2
+    go Task(a, done)
+    <-done // wait for the goroutine to signal completion
+}
+```
+
 ---
 
-*Learning completed on: 2026-06-18*
+*Learning completed on: 2026-06-19*
